@@ -1,6 +1,7 @@
 package Ticketing;
+import java.io.Serializable;
 
-public class Configuration {
+public class Configuration implements Serializable {
     private int totalTickets;
     private int ticketReleaseRate;
     private int customerRetrievalRate;
