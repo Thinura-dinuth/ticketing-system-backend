@@ -5,10 +5,19 @@ import java.util.List;
 
 public class TicketPool {
     private final List<String> tickets = new ArrayList<>();
+    private final int maxCapacity;
+
+    public TicketPool(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
+    }
 
     public synchronized void addTickets(List<String> newTickets) {
-        tickets.addAll(newTickets);
-        System.out.println("Added " + newTickets.size() + " tickets to the pool.");
+        if (tickets.size() + newTickets.size() <= maxCapacity) {
+            tickets.addAll(newTickets);
+            System.out.println("Added " + newTickets.size() + " tickets to the pool.");
+        } else {
+            System.out.println("Cannot add tickets. Maximum capacity reached.");
+        }
         displayTicketStatus();
     }
 

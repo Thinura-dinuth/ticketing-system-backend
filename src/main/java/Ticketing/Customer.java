@@ -1,5 +1,7 @@
 package Ticketing;
 
+import java.util.List;
+
 public class Customer implements Runnable {
     private String name;
     private int customerId;
@@ -16,14 +18,15 @@ public class Customer implements Runnable {
     @Override
     public void run() {
         System.out.println(name + " is running.");
-        // Sample logic: simulate retrieving tickets
         while (true) {
-            String ticket = ticketPool.removeTicket();
-            if (ticket == null) {
-                System.out.println(name + " found no more tickets to retrieve.");
-                break;
+            synchronized (ticketPool) {
+                if (ticketPool.getTickets().isEmpty()) {
+                    System.out.println(name + " found no more tickets to retrieve.");
+                    break;
+                }
+                List<String> retrievedTickets = ticketPool.removeTickets(1); // Attempt to retrieve one ticket
+                System.out.println(name + " retrieved ticket: " + retrievedTickets.get(0));
             }
-            System.out.println(name + " retrieved ticket: " + ticket);
             try {
                 Thread.sleep(retrievalInterval); // Simulate time taken to retrieve a ticket
             } catch (InterruptedException e) {
