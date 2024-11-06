@@ -48,36 +48,11 @@ public class Main {
         }
 
         Configuration config = new Configuration(totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity);
+        ConfigurationSerializer.saveConfiguration(config, "config.txt");
         System.out.println("Configuration set successfully.");
 
+
         scanner.close();
-
-        TicketPool ticketPool = new TicketPool();
-
-        // Create and start multiple vendor threads
-        Vendor vendor1 = new Vendor("Vendor1", 1, 5, 1000);
-        Vendor vendor2 = new Vendor("Vendor2", 2, 5, 1000);
-        Vendor vendor3 = new Vendor("Vendor3", 3, 5, 1000);
-
-        Thread vendorThread1 = new Thread(vendor1);
-        Thread vendorThread2 = new Thread(vendor2);
-        Thread vendorThread3 = new Thread(vendor3);
-
-        vendorThread1.start();
-        vendorThread2.start();
-        vendorThread3.start();
-
-        // Create and start multiple customer threads
-        Customer customer1 = new Customer("Customer1", 1, 1000, ticketPool);
-        Customer customer2 = new Customer("Customer2", 2, 1000, ticketPool);
-        Customer customer3 = new Customer("Customer3", 3, 1000, ticketPool);
-
-        Thread customerThread1 = new Thread(customer1);
-        Thread customerThread2 = new Thread(customer2);
-        Thread customerThread3 = new Thread(customer3);
-
-        customerThread1.start();
-        customerThread2.start();
-        customerThread3.start();
+//
     }
 }

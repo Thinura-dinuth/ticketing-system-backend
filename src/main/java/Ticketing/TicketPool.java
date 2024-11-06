@@ -1,28 +1,32 @@
 package Ticketing;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TicketPool {
-    private final List<String> tickets = new CopyOnWriteArrayList<>();
+    private final List<String> tickets = new ArrayList<>();
 
     public synchronized void addTickets(List<String> newTickets) {
         tickets.addAll(newTickets);
         System.out.println("Added " + newTickets.size() + " tickets to the pool.");
+        displayTicketStatus();
     }
 
-    public synchronized String removeTicket() {
-        if (!tickets.isEmpty()) {
-            String ticket = tickets.remove(0);
-            System.out.println("Removed ticket: " + ticket);
-            return ticket;
-        } else {
-            System.out.println("No tickets available to remove.");
-            return null;
+    public synchronized List<String> removeTickets(int numberOfTickets) {
+        List<String> removedTickets = new ArrayList<>();
+        for (int i = 0; i < numberOfTickets && !tickets.isEmpty(); i++) {
+            removedTickets.add(tickets.remove(0));
         }
+        System.out.println("Removed " + removedTickets.size() + " tickets from the pool.");
+        displayTicketStatus();
+        return removedTickets;
     }
 
-    public List<String> getTickets() {
-        return new CopyOnWriteArrayList<>(tickets);
+    public synchronized List<String> getTickets() {
+        return new ArrayList<>(tickets);
+    }
+
+    private void displayTicketStatus() {
+        System.out.println("Current ticket pool status: " + tickets.size() + " tickets available.");
     }
 }
