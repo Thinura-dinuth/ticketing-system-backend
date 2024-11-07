@@ -32,7 +32,6 @@ public class Vendor implements Runnable {
             try {
                 Thread.sleep(releaseInterval); // Simulate time taken to release tickets
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
                 System.out.println(name + " was interrupted.");
                 break;
             }

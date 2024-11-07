@@ -30,7 +30,6 @@ public class Customer implements Runnable {
             try {
                 Thread.sleep(retrievalInterval); // Simulate time taken to retrieve a ticket
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
                 System.out.println(name + " was interrupted.");
                 break;
             }
