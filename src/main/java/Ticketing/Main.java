@@ -1,6 +1,7 @@
 package Ticketing;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -73,25 +74,27 @@ public class Main {
             System.out.print("Enter command (start/stop/add/remove/exit): ");
             String command = scanner.next();
 
-            // Have implement the Error Handling part for the menu
-
-            if (command.equalsIgnoreCase("start")) {
-                start(config);
-            } else if (command.equalsIgnoreCase("stop")) {
-                stop();
-            } else if (command.equalsIgnoreCase("add")) {
-                System.out.print("Enter number of tickets to add: ");
-                int numTickets = scanner.nextInt();
-                addTickets(numTickets);
-            } else if (command.equalsIgnoreCase("remove")) {
-                System.out.print("Enter number of tickets to remove: ");
-                int numTickets = scanner.nextInt();
-                removeTickets(numTickets);
-            } else if (command.equalsIgnoreCase("exit")) {
-                stop();
-                System.out.println("Exiting program.");
-                break;
-            } else {
+            try{
+                if (command.equalsIgnoreCase("start")) {
+                    start(config);
+                } else if (command.equalsIgnoreCase("stop")) {
+                    stop();
+                } else if (command.equalsIgnoreCase("add")) {
+                    System.out.print("Enter number of tickets to add: ");
+                    int numTickets = scanner.nextInt();
+                    addTickets(numTickets);
+                } else if (command.equalsIgnoreCase("remove")) {
+                    System.out.print("Enter number of tickets to remove: ");
+                    int numTickets = scanner.nextInt();
+                    removeTickets(numTickets);
+                } else if (command.equalsIgnoreCase("exit")) {
+                    stop();
+                    System.out.println("Exiting program.");
+                    break;
+                } else {
+                    System.out.println("Unknown command. Please enter 'start', 'stop', 'add', 'remove', or 'exit'.");
+                }
+            } catch (InputMismatchException e) {
                 System.out.println("Unknown command. Please enter 'start', 'stop', 'add', 'remove', or 'exit'.");
             }
         }
