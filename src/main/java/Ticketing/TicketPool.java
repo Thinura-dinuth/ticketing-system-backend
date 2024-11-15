@@ -12,21 +12,30 @@ public class TicketPool {
     }
 
     public synchronized void addTickets(List<String> newTickets) {
-        if (tickets.size() + newTickets.size() <= maxCapacity) {
+        int availableCapacity = maxCapacity - tickets.size();
+        if (availableCapacity == 0) {
+            System.out.println("Cannot add tickets. Maximum capacity reached.");
+        } else if (newTickets.size() > availableCapacity) {
+            System.out.println("You can only add " + availableCapacity + " more tickets.");
+        } else {
             tickets.addAll(newTickets);
             System.out.println("Added " + newTickets.size() + " tickets to the pool.");
-        } else {
-            System.out.println("Cannot add tickets. Maximum capacity reached.");
         }
         displayTicketStatus();
     }
 
     public synchronized List<String> removeTickets(int numberOfTickets) {
         List<String> removedTickets = new ArrayList<>();
-        for (int i = 0; i < numberOfTickets && !tickets.isEmpty(); i++) {
-            removedTickets.add(tickets.remove(0));
+        if (tickets.isEmpty()) {
+            System.out.println("No tickets to remove.");
+        } else if (numberOfTickets > tickets.size()) {
+            System.out.println("Cannot remove " + numberOfTickets + " tickets. Only " + tickets.size() + " tickets available.");
+        } else {
+            for (int i = 0; i < numberOfTickets; i++) {
+                removedTickets.add(tickets.remove(0));
+            }
+            System.out.println("Removed " + removedTickets.size() + " tickets from the pool.");
         }
-        System.out.println("Removed " + removedTickets.size() + " tickets from the pool.");
         displayTicketStatus();
         return removedTickets;
     }
