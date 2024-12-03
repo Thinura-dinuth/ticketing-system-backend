@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Main {
     private TicketPool ticketPool;
+    private List<Thread> threads = new ArrayList<>();
 
     public static void main(String[] args) {
         Main mainInstance = new Main();
@@ -21,8 +22,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         int totalTickets = getInput(scanner, "Enter Total Number of Tickets: ", "Total Tickets must be a positive number.");
-        int ticketReleaseRate = getInput(scanner, "Enter Ticket Release Rate: ", "Ticket Release Rate must be a positive number.");
-        int customerRetrievalRate = getInput(scanner, "Enter Customer Retrieval Rate: ", "Customer Retrieval Rate must be a positive number.");
+        int ticketReleaseRate = getInput(scanner, "Enter Ticket Release Rate (tickets per minute): ", "Ticket Release Rate must be a positive number.");
+        int customerRetrievalRate = getInput(scanner, "Enter Customer Retrieval Rate (tickets per minute): ", "Customer Retrieval Rate must be a positive number.");
         int maxTicketCapacity = getInput(scanner, "Enter Max Ticket Capacity: ", "Max Ticket Capacity must be a positive number and greater than or equal to Total Tickets.", totalTickets);
 
         Configuration config = new Configuration(totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity);
@@ -107,11 +108,35 @@ public class Main {
     }
 
     private void start(Configuration config) {
-        System.out.println("Operations started.");
+        System.out.println("Starting operations...");
+
+        Vendor vendor = new Vendor("Vendor1", 1, config.getTicketReleaseRate(), ticketPool);
+        Customer customer = new Customer("Customer1", 1, config.getCustomerRetrievalRate(), ticketPool);
+
+        Thread vendorThread = new Thread(vendor);
+        Thread customerThread = new Thread(customer);
+
+        threads.add(vendorThread);
+        threads.add(customerThread);
+
+        vendorThread.start();
+        customerThread.start();
     }
 
     private void stop() {
-        System.out.println("Operations stopped.");
+        System.out.println("Stopping operations...");
+        for (Thread thread : threads) {
+            thread.interrupt();
+        }
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        threads.clear();
+        System.out.println("All operations stopped.");
     }
 
     private void addTickets(int numTickets) {
