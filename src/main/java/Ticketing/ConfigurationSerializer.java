@@ -1,6 +1,5 @@
 package Ticketing;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,10 +16,5 @@ public class ConfigurationSerializer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Configuration loadConfiguration(String fileName) {
-        // Implement loading logic if needed
-        return null;
     }
 }

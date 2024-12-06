@@ -22,12 +22,12 @@ public class Customer implements Runnable {
         while (true) {
             synchronized (ticketPool) {
                 if (ticketPool.getTickets().isEmpty()) {
-                    System.out.println(name + " found no more tickets to retrieve.");
+                    System.out.println(name + " found no more tickets to purchase.");
                     break;
                 }
-                List<String> retrievedTickets = ticketPool.removeTickets(1); // Attempt to retrieve one ticket
-                if (!retrievedTickets.isEmpty()) {
-                    System.out.println(name + " retrieved ticket: " + retrievedTickets.get(0));
+                List<String> purchasedTickets = ticketPool.removeTickets(1); // Attempt to retrieve one ticket
+                if (!purchasedTickets.isEmpty()) {
+                    System.out.println(name + " purchase ticket: " + purchasedTickets.get(0));
                 }
                 try {
                     Thread.sleep(retrievalInterval); // Simulate time taken to retrieve a ticket
@@ -37,6 +37,5 @@ public class Customer implements Runnable {
                 }
             }
         }
-        System.out.println(name + " has finished retrieving tickets.");
     }
 }

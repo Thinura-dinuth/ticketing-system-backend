@@ -25,6 +25,8 @@ public class Main {
         int ticketReleaseRate = getInput(scanner, "Enter Ticket Release Rate (tickets per minute): ", "Ticket Release Rate must be a positive number.");
         int customerRetrievalRate = getInput(scanner, "Enter Customer Retrieval Rate (tickets per minute): ", "Customer Retrieval Rate must be a positive number.");
         int maxTicketCapacity = getInput(scanner, "Enter Max Ticket Capacity: ", "Max Ticket Capacity must be a positive number and greater than or equal to Total Tickets.", totalTickets);
+        int numVendors = getInput(scanner, "Enter Number of Vendors: ", "Number of Vendors must be a positive number.");
+        int numCustomers = getInput(scanner, "Enter Number of Customers: ", "Number of Customers must be a positive number.");
 
         Configuration config = new Configuration(totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity);
         ConfigurationSerializer.saveConfiguration(config, "config.txt");
@@ -40,7 +42,7 @@ public class Main {
 
         ticketPool.addTickets(initialTickets);
 
-        menu(scanner, config);
+        menu(scanner, config, numVendors, numCustomers);
     }
 
     private int getInput(Scanner scanner, String prompt, String errorMessage) {
@@ -75,25 +77,25 @@ public class Main {
         return input;
     }
 
-    private void menu(Scanner scanner, Configuration config) {
+    private void menu(Scanner scanner, Configuration config, int numVendors, int numCustomers) {
         while (true) {
-            System.out.print("Enter command (start/stop/add/remove/exit): ");
+            System.out.print("Enter command (start-1/stop-2/add-3/remove-4/exit-0): ");
             String command = scanner.next();
 
             try {
-                if (command.equalsIgnoreCase("start")) {
-                    start(config);
-                } else if (command.equalsIgnoreCase("stop")) {
+                if (command.equalsIgnoreCase("start") || command.equals("1")) {
+                    start(config, numVendors, numCustomers);
+                } else if (command.equalsIgnoreCase("stop") || command.equals("2")) {
                     stop();
-                } else if (command.equalsIgnoreCase("add")) {
+                } else if (command.equalsIgnoreCase("add") || command.equals("3")) {
                     System.out.print("Enter number of tickets to add: ");
                     int numTickets = scanner.nextInt();
                     addTickets(numTickets);
-                } else if (command.equalsIgnoreCase("remove")) {
+                } else if (command.equalsIgnoreCase("remove") || command.equals("4")) {
                     System.out.print("Enter number of tickets to remove: ");
                     int numTickets = scanner.nextInt();
                     removeTickets(numTickets);
-                } else if (command.equalsIgnoreCase("exit")) {
+                } else if (command.equalsIgnoreCase("exit") || command.equals("0")) {
                     stop();
                     System.out.println("Exiting program.");
                     break;
@@ -107,20 +109,22 @@ public class Main {
         }
     }
 
-    private void start(Configuration config) {
+    private void start(Configuration config, int numVendors, int numCustomers) {
         System.out.println("Starting operations...");
 
-        Vendor vendor = new Vendor("Vendor1", 1, config.getTicketReleaseRate(), ticketPool);
-        Customer customer = new Customer("Customer1", 1, config.getCustomerRetrievalRate(), ticketPool);
+        for (int i = 1; i <= numVendors; i++) {
+            Vendor vendor = new Vendor("Vendor" + i, i, config.getTicketReleaseRate(), ticketPool);
+            Thread vendorThread = new Thread(vendor);
+            threads.add(vendorThread);
+            vendorThread.start();
+        }
 
-        Thread vendorThread = new Thread(vendor);
-        Thread customerThread = new Thread(customer);
-
-        threads.add(vendorThread);
-        threads.add(customerThread);
-
-        vendorThread.start();
-        customerThread.start();
+        for (int i = 1; i <= numCustomers; i++) {
+            Customer customer = new Customer("Customer" + i, i, config.getCustomerRetrievalRate(), ticketPool);
+            Thread customerThread = new Thread(customer);
+            threads.add(customerThread);
+            customerThread.start();
+        }
     }
 
     private void stop() {

@@ -47,4 +47,8 @@ public class TicketPool {
     private void displayTicketStatus() {
         System.out.println("Current ticket pool status: " + tickets.size() + " tickets available.");
     }
+
+    public int getMaxCapacity() {
+        return maxCapacity;
+    }
 }
