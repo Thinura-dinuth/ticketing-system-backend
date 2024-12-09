@@ -1,4 +1,4 @@
-package Ticketing;
+package JavaCLI;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,6 +12,8 @@ public class ConfigurationSerializer {
             writer.println("Ticket Release Rate: " + config.getTicketReleaseRate());
             writer.println("Customer Retrieval Rate: " + config.getCustomerRetrievalRate());
             writer.println("Max Ticket Capacity: " + config.getMaxTicketCapacity());
+            writer.println("Number of Vendors: " + config.getNumVendors());
+            writer.println("Number of Customers: " + config.getNumCustomers());
             System.out.println("Configuration saved to " + fileName);
         } catch (IOException e) {
             e.printStackTrace();

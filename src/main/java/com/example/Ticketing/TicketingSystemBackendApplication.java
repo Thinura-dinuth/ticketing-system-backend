@@ -1,4 +1,4 @@
-package com.example.Ticketing.System.Backend;
+package com.example.Ticketing;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

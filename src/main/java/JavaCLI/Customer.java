@@ -1,4 +1,4 @@
-package Ticketing;
+package JavaCLI;
 
 import java.util.List;
 

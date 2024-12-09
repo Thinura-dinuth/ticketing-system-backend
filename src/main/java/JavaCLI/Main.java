@@ -1,5 +1,7 @@
-package Ticketing;
+package JavaCLI;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -28,7 +30,7 @@ public class Main {
         int numVendors = getInput(scanner, "Enter Number of Vendors: ", "Number of Vendors must be a positive number.");
         int numCustomers = getInput(scanner, "Enter Number of Customers: ", "Number of Customers must be a positive number.");
 
-        Configuration config = new Configuration(totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity);
+        Configuration config = new Configuration(totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity, numVendors, numCustomers);
         ConfigurationSerializer.saveConfiguration(config, "config.txt");
         System.out.println("Configuration set successfully.");
 
@@ -97,6 +99,7 @@ public class Main {
                     removeTickets(numTickets);
                 } else if (command.equalsIgnoreCase("exit") || command.equals("0")) {
                     stop();
+                    clearConfigurationFile("config.txt");
                     System.out.println("Exiting program.");
                     break;
                 } else {
@@ -153,5 +156,13 @@ public class Main {
 
     private void removeTickets(int numTickets) {
         ticketPool.removeTickets(numTickets);
+    }
+
+    private void clearConfigurationFile(String fileName) {
+        try (FileWriter writer = new FileWriter(fileName, false)) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
