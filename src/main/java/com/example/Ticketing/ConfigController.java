@@ -4,15 +4,18 @@ import JavaCLI.Main;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.nio.file.*;
-import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 @RestController
 @RequestMapping("/api")
 public class ConfigController {
 
-    private final Main mainInstance = new Main();
     private static final String FILE_PATH = "D:/Second Year-Level 5/OOP/CW/Ticketing-System-Backend/config.txt";
     private static final String CLASS_PATH = "D:/Second Year-Level 5/OOP/CW/Ticketing-System-Backend/target/classes"; // Update this path
+    private Process process;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @PostMapping("/save-config")
     public String saveConfig(@RequestBody String config) {
@@ -27,36 +30,35 @@ public class ConfigController {
     @PostMapping("/start-process")
     public String startProcess() {
         try {
-            List<String> configLines = Files.readAllLines(Paths.get(FILE_PATH));
-            List<String> params = new ArrayList<>();
-            for (String line : configLines) {
-                String[] parts = line.split(": ");
-                if (parts.length == 2) {
-                    params.add(parts[1]);
-                }
-            }
-            ProcessBuilder processBuilder = new ProcessBuilder("java", "-cp", CLASS_PATH, "JavaCLI.Main");
-            processBuilder.command().addAll(params);
-            processBuilder.inheritIO();
-            processBuilder.start();
+            ProcessBuilder processBuilder = new ProcessBuilder("java", "-cp", CLASS_PATH, "JavaCLI.Main", "start");
+            processBuilder.redirectErrorStream(true);
+            process = processBuilder.start();
 
-            // Call the run method
-            mainInstance.run();
-            return "Process started successfully";
+            executorService.submit(() -> {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        // Send the output to the frontend (e.g., using WebSocket or other means)
+                        // For simplicity, we will just print it here
+                        System.out.println(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
         } catch (IOException e) {
             return "Error starting process: " + e.getMessage();
-        } catch (Exception e) {
-            return "Error in run method: " + e.getMessage();
         }
+        return "Process started successfully";
     }
 
     @PostMapping("/stop-process")
     public String stopProcess() {
-        try {
-            mainInstance.stop();
+        if (process != null) {
+            process.destroy();
             return "Process stopped successfully";
-        } catch (Exception e) {
-            return "Error stopping process: " + e.getMessage();
         }
+        return "No process to stop";
     }
 }

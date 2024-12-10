@@ -30,6 +30,16 @@ public class Main {
             config = promptUserForConfiguration();
             // Save the new configuration to the file
             ConfigurationSerializer.saveConfiguration(config, "config.txt");
+            // Initialize ticket pool using max ticket capacity from config
+            ticketPool = new TicketPool(config.getMaxTicketCapacity());
+
+            // Add the total number of tickets to the ticket pool
+            List<String> initialTickets = new ArrayList<>();
+            for (int i = 0; i < config.getTotalTickets(); i++) {
+                initialTickets.add("Ticket-" + i);
+            }
+
+            ticketPool.addTickets(initialTickets);
             System.out.println("Configuration set successfully.");
             menu(config);
         } else {
@@ -39,21 +49,18 @@ public class Main {
                 System.out.println("Failed to load configuration. Please check the config file.");
                 return;
             }
+            // Initialize ticket pool using max ticket capacity from config
+            ticketPool = new TicketPool(config.getMaxTicketCapacity());
+
+            // Add the total number of tickets to the ticket pool
+            List<String> initialTickets = new ArrayList<>();
+            for (int i = 0; i < config.getTotalTickets(); i++) {
+                initialTickets.add("Ticket-" + i);
+            }
+            ticketPool.addTickets(initialTickets);
             System.out.println("Configuration loaded from config.txt.");
+            start(config);
         }
-
-        // Initialize ticket pool using max ticket capacity from config
-        ticketPool = new TicketPool(config.getMaxTicketCapacity());
-
-        // Add the total number of tickets to the ticket pool
-        List<String> initialTickets = new ArrayList<>();
-        for (int i = 0; i < config.getTotalTickets(); i++) {
-            initialTickets.add("Ticket-" + i);
-        }
-
-        ticketPool.addTickets(initialTickets);
-        start(config);
-        menu(config);
     }
 
     private boolean isConfigFileEmpty(String fileName) {
