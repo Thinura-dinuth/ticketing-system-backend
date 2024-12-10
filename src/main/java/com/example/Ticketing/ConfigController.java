@@ -1,5 +1,6 @@
 package com.example.Ticketing;
 
+import JavaCLI.Main;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.nio.file.*;
@@ -9,6 +10,7 @@ import java.util.*;
 @RequestMapping("/api")
 public class ConfigController {
 
+    private final Main mainInstance = new Main();
     private static final String FILE_PATH = "D:/Second Year-Level 5/OOP/CW/Ticketing-System-Backend/config.txt";
     private static final String CLASS_PATH = "D:/Second Year-Level 5/OOP/CW/Ticketing-System-Backend/target/classes"; // Update this path
 
@@ -37,9 +39,24 @@ public class ConfigController {
             processBuilder.command().addAll(params);
             processBuilder.inheritIO();
             processBuilder.start();
+
+            // Call the run method
+            mainInstance.run();
+            return "Process started successfully";
         } catch (IOException e) {
             return "Error starting process: " + e.getMessage();
+        } catch (Exception e) {
+            return "Error in run method: " + e.getMessage();
         }
-        return "Process started successfully";
+    }
+
+    @PostMapping("/stop-process")
+    public String stopProcess() {
+        try {
+            mainInstance.stop();
+            return "Process stopped successfully";
+        } catch (Exception e) {
+            return "Error stopping process: " + e.getMessage();
+        }
     }
 }

@@ -20,7 +20,7 @@ public class Vendor implements Runnable {
     public void run() {
         System.out.println(name + " is running.");
         int releaseInterval = 60000 / ticketsPerMinute; // Convert tickets per minute to interval in milliseconds
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             List<String> newTickets = new ArrayList<>();
             for (int i = 0; i < ticketsPerMinute; i++) {
                 newTickets.add("Ticket-" + vendorId + "-" + System.currentTimeMillis());
@@ -38,6 +38,7 @@ public class Vendor implements Runnable {
                 Thread.sleep(releaseInterval); // Simulate time taken to release tickets
             } catch (InterruptedException e) {
                 System.out.println(name + " was interrupted.");
+                Thread.currentThread().interrupt(); // Preserve the interrupted status
                 break;
             }
         }

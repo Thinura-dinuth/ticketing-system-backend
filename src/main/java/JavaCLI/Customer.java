@@ -19,7 +19,7 @@ public class Customer implements Runnable {
     public void run() {
         System.out.println(name + " is running.");
         int retrievalInterval = 60000 / ticketsPerMinute; // Convert tickets per minute to interval in milliseconds
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             synchronized (ticketPool) {
                 if (ticketPool.getTickets().isEmpty()) {
                     System.out.println(name + " found no more tickets to purchase.");
@@ -33,6 +33,7 @@ public class Customer implements Runnable {
                     Thread.sleep(retrievalInterval); // Simulate time taken to retrieve a ticket
                 } catch (InterruptedException e) {
                     System.out.println(name + " was interrupted.");
+                    Thread.currentThread().interrupt(); // Preserve the interrupted status
                     break;
                 }
             }
