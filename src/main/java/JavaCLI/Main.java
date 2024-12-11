@@ -42,6 +42,7 @@ public class Main {
             ticketPool.addTickets(initialTickets);
             System.out.println("Configuration set successfully.");
             menu(config);
+
         } else {
             // If not empty, load configuration from the file
             config = loadConfiguration("config.txt");
