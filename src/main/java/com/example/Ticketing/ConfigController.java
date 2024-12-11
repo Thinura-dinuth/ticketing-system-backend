@@ -7,13 +7,12 @@ import java.nio.file.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 @RestController
 @RequestMapping("/api")
 public class ConfigController {
 
-    private static final String FILE_PATH = "D:/Second Year-Level 5/OOP/CW/Ticketing-System-Backend/config.txt";
-    private static final String CLASS_PATH = "D:/Second Year-Level 5/OOP/CW/Ticketing-System-Backend/target/classes"; // Update this path
+    private static final String FILE_PATH = "config.txt"; // Use relative path
+    private static final String CLASS_PATH = "target/classes"; // Use relative path
     private Process process;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
