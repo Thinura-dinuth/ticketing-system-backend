@@ -55,10 +55,10 @@ The Java CLI serves as the core control mechanism for the Ticket Management Syst
 ### 3. Interactive Command Menu
 Available commands:
 
-* start (1): Initiate system operations
-* stop (2): Halt all ongoing operations
-* add (3): Dynamically add tickets to the pool
-* remove (4): Remove tickets from the pool
-* exit (0): Terminate the application and clear configuration
+* ```start (1)```: Initiate system operations
+* ```stop (2)```: Halt all ongoing operations
+* ```add (3)```: Dynamically add tickets to the pool
+* ```remove (4)```: Remove tickets from the pool
+* ```exit (0)```: Terminate the application and clear configuration
 
   
